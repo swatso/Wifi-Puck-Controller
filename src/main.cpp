@@ -102,11 +102,8 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  servos[0].servo.attach(SERVO_1_PIN);
-  servos[1].servo.attach(SERVO_2_PIN);
-  for (auto &state : servos) {
-    state.servo.writeMicroseconds(state.off);
-  }
+  servos[0].servo.attach(SERVO_1_PIN, 200, 3000, SERVO_1_OFF_US);
+  servos[1].servo.attach(SERVO_2_PIN, 200, 3000, SERVO_2_OFF_US);
   digitalWrite(SERVO_POWER_PIN, HIGH);
 
   if (LittleFS.begin() &&

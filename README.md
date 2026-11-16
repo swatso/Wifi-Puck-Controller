@@ -11,8 +11,9 @@ output is enabled. The onboard LED is on while Wi-Fi is connected.
 Edit the pin and pulse-width `#define`s at the top of `src/main.cpp` for your
 wiring and mechanism. The supplied D1, D2 and D5 assignments and 1000/2000 µs
 positions are placeholders; check the travel limits before connecting the
-mechanism. The servos and their power switch need a suitable supply and common
-ground with the ESP8266.
+mechanism. The ESP8266 Servo library accepts pulse widths from 200 to 3000 µs;
+choose safe values for your servos and mechanism. The servos and their power
+switch need a suitable supply and common ground with the ESP8266.
 
 Create these local, plaintext files in the project's `data` directory:
 

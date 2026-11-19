@@ -5,6 +5,8 @@ SG90 servos that raise and lower magnets beneath a diorama. MQTT commands
 move both servos smoothly between their configured positions over two seconds.
 The servos start at their off positions before the active-high servo power
 output is enabled. The onboard LED is on while Wi-Fi is connected.
+The active-high ALIVE output on D6 (GPIO12) is asserted at the beginning of
+firmware setup to keep the device powered.
 
 ## Configuration
 
@@ -28,8 +30,17 @@ until corrected and the device restarted. Hostnames and SSIDs must not be empty
 and are limited to 32 bytes; passwords are limited to 64 bytes.
 
 The controller connects to the MQTT broker at `192.168.0.2:1883` and subscribes
-to `track/turnout/node28/Attach`. A payload beginning with uppercase `T` raises
+to `track/turnout/node2B/Attach`. A payload beginning with uppercase `T` raises
 both magnets; any other payload, including an empty one, lowers them.
+It also subscribes to `track/turnout/node2B/KeepAlive`. Only a payload beginning
+with uppercase `T` resets the five-minute keep-alive timer. The timer starts at
+startup and continues even if Wi-Fi, MQTT, or configuration is unavailable.
+If it expires, ALIVE goes low and remains low until the device restarts.
+Publish keep-alives without the MQTT retain flag: a retained message could
+otherwise reset the timer on reconnection even after the sender has stopped.
+Firmware cannot drive ALIVE during reset or before setup runs; the power
+circuit must hold the device on through that interval. The timeout is checked
+by the main loop, so blocking network operations can delay it.
 It publishes the raw A0 ADC reading (0–1023) as decimal text to
 `track/sensor/node2B/Battery` once per minute while MQTT is connected. Battery
 voltage scaling is not yet defined: use an appropriate voltage divider and
